@@ -36,6 +36,6 @@ for version in versions:
 common_templates = gcp.CommonTemplates()
 templates = common_templates.node_library(
     source_location='build/src', versions=["v1"], default_version="v1")
-s.copy(templates, excludes=[".github/workflows/ci.yaml"])
+s.copy(templates, excludes=[])
 
 node.postprocess_gapic_library()
