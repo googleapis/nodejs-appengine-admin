@@ -20,9 +20,7 @@
 const path = require('path');
 const cp = require('child_process');
 const {before, describe, it} = require('mocha');
-// eslint-disable-next-line node/no-missing-require
 const {ServicesClient} = require('@google-cloud/appengine-admin');
-// eslint-disable-next-line no-unused-vars, node/no-missing-require
 const {assert} = require('chai');
 
 const execSync = cmd => cp.execSync(cmd, {encoding: 'utf-8'});
