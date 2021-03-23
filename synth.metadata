@@ -3,8 +3,8 @@
     {
       "git": {
         "name": ".",
-        "remote": "sso://user/sofialeon/nodejs-appengine-admin",
-        "sha": "1b8bac63942e37e3123e19aaa02acd5f729327ca"
+        "remote": "https://github.com/googleapis/nodejs-appengine-admin.git",
+        "sha": "48609150942081060738448d35b26230acccf31d"
       }
     },
     {
