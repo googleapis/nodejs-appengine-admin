@@ -29,7 +29,7 @@ async function main(projectId) {
     const [versions] = await client.listServices({
       parent: `apps/${projectId}`,
     });
-    console.info([versions]);
+    console.info(versions);
   }
   listVersions();
   // [END nodejs_appengine_admin_quickstart]
