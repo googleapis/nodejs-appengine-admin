@@ -18,18 +18,11 @@
 
 /* global window */
 import * as gax from 'google-gax';
-import {
-  Callback,
-  CallOptions,
-  Descriptors,
-  ClientOptions,
-  PaginationCallback,
-  GaxCall,
-} from 'google-gax';
+import {Callback, CallOptions, Descriptors, ClientOptions, PaginationCallback, GaxCall} from 'google-gax';
 import * as path from 'path';
 
-import {Transform} from 'stream';
-import {RequestType} from 'google-gax/build/src/apitypes';
+import { Transform } from 'stream';
+import { RequestType } from 'google-gax/build/src/apitypes';
 import * as protos from '../../protos/protos';
 /**
  * Client JSON configuration object, loaded from
@@ -102,13 +95,10 @@ export class AuthorizedDomainsClient {
   constructor(opts?: ClientOptions) {
     // Ensure that options include all the required fields.
     const staticMembers = this.constructor as typeof AuthorizedDomainsClient;
-    const servicePath =
-      opts?.servicePath || opts?.apiEndpoint || staticMembers.servicePath;
+    const servicePath = opts?.servicePath || opts?.apiEndpoint || staticMembers.servicePath;
     const port = opts?.port || staticMembers.port;
     const clientConfig = opts?.clientConfig ?? {};
-    const fallback =
-      opts?.fallback ??
-      (typeof window !== 'undefined' && typeof window?.fetch === 'function');
+    const fallback = opts?.fallback ?? (typeof window !== 'undefined' && typeof window?.fetch === 'function');
     opts = Object.assign({servicePath, port, clientConfig, fallback}, opts);
 
     // If scopes are unset in options and we're connecting to a non-default endpoint, set scopes just in case.
@@ -126,7 +116,7 @@ export class AuthorizedDomainsClient {
     this._opts = opts;
 
     // Save the auth object to the client, for use by other methods.
-    this.auth = this._gaxGrpc.auth as gax.GoogleAuth;
+    this.auth = (this._gaxGrpc.auth as gax.GoogleAuth);
 
     // Set the default scopes in auth client if needed.
     if (servicePath === staticMembers.servicePath) {
@@ -134,7 +124,10 @@ export class AuthorizedDomainsClient {
     }
 
     // Determine the client header string.
-    const clientHeader = [`gax/${this._gaxModule.version}`, `gapic/${version}`];
+    const clientHeader = [
+      `gax/${this._gaxModule.version}`,
+      `gapic/${version}`,
+    ];
     if (typeof process !== 'undefined' && 'versions' in process) {
       clientHeader.push(`gl-node/${process.versions.node}`);
     } else {
@@ -150,18 +143,12 @@ export class AuthorizedDomainsClient {
     // For Node.js, pass the path to JSON proto file.
     // For browsers, pass the JSON content.
 
-    const nodejsProtoPath = path.join(
-      __dirname,
-      '..',
-      '..',
-      'protos',
-      'protos.json'
-    );
+    const nodejsProtoPath = path.join(__dirname, '..', '..', 'protos', 'protos.json');
     this._protos = this._gaxGrpc.loadProto(
-      opts.fallback
-        ? // eslint-disable-next-line @typescript-eslint/no-var-requires
-          require('../../protos/protos.json')
-        : nodejsProtoPath
+      opts.fallback ?
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        require("../../protos/protos.json") :
+        nodejsProtoPath
     );
 
     // This API contains "path templates"; forward-slash-separated
@@ -177,20 +164,14 @@ export class AuthorizedDomainsClient {
     // (e.g. 50 results at a time, with tokens to get subsequent
     // pages). Denote the keys used for pagination and results.
     this.descriptors.page = {
-      listAuthorizedDomains: new this._gaxModule.PageDescriptor(
-        'pageToken',
-        'nextPageToken',
-        'domains'
-      ),
+      listAuthorizedDomains:
+          new this._gaxModule.PageDescriptor('pageToken', 'nextPageToken', 'domains')
     };
 
     // Put together the default options sent with requests.
     this._defaults = this._gaxGrpc.constructSettings(
-      'google.appengine.v1.AuthorizedDomains',
-      gapicConfig as gax.ClientConfig,
-      opts.clientConfig || {},
-      {'x-goog-api-client': clientHeader.join(' ')}
-    );
+        'google.appengine.v1.AuthorizedDomains', gapicConfig as gax.ClientConfig,
+        opts.clientConfig || {}, {'x-goog-api-client': clientHeader.join(' ')});
 
     // Set up a dictionary of "inner API calls"; the core implementation
     // of calling the API is handled in `google-gax`, with this code
@@ -218,18 +199,16 @@ export class AuthorizedDomainsClient {
     // Put together the "service stub" for
     // google.appengine.v1.AuthorizedDomains.
     this.authorizedDomainsStub = this._gaxGrpc.createStub(
-      this._opts.fallback
-        ? (this._protos as protobuf.Root).lookupService(
-            'google.appengine.v1.AuthorizedDomains'
-          )
-        : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        this._opts.fallback ?
+          (this._protos as protobuf.Root).lookupService('google.appengine.v1.AuthorizedDomains') :
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (this._protos as any).google.appengine.v1.AuthorizedDomains,
-      this._opts
-    ) as Promise<{[method: string]: Function}>;
+        this._opts) as Promise<{[method: string]: Function}>;
 
     // Iterate over each of the methods that the service provides
     // and create an API call method for each.
-    const authorizedDomainsStubMethods = ['listAuthorizedDomains'];
+    const authorizedDomainsStubMethods =
+        ['listAuthorizedDomains'];
     for (const methodName of authorizedDomainsStubMethods) {
       const callPromise = this.authorizedDomainsStub.then(
         stub => (...args: Array<{}>) => {
@@ -239,12 +218,13 @@ export class AuthorizedDomainsClient {
           const func = stub[methodName];
           return func.apply(stub, args);
         },
-        (err: Error | null | undefined) => () => {
+        (err: Error|null|undefined) => () => {
           throw err;
-        }
-      );
+        });
 
-      const descriptor = this.descriptors.page[methodName] || undefined;
+      const descriptor =
+        this.descriptors.page[methodName] ||
+        undefined;
       const apiCall = this._gaxModule.createApiCall(
         callPromise,
         this._defaults[methodName],
@@ -291,7 +271,7 @@ export class AuthorizedDomainsClient {
     return [
       'https://www.googleapis.com/auth/appengine.admin',
       'https://www.googleapis.com/auth/cloud-platform',
-      'https://www.googleapis.com/auth/cloud-platform.read-only',
+      'https://www.googleapis.com/auth/cloud-platform.read-only'
     ];
   }
 
@@ -301,9 +281,8 @@ export class AuthorizedDomainsClient {
    * Return the project ID used by this class.
    * @returns {Promise} A promise that resolves to string containing the project ID.
    */
-  getProjectId(
-    callback?: Callback<string, undefined, undefined>
-  ): Promise<string> | void {
+  getProjectId(callback?: Callback<string, undefined, undefined>):
+      Promise<string>|void {
     if (callback) {
       this.auth.getProjectId(callback);
       return;
@@ -316,91 +295,72 @@ export class AuthorizedDomainsClient {
   // -------------------
 
   listAuthorizedDomains(
-    request: protos.google.appengine.v1.IListAuthorizedDomainsRequest,
-    options?: CallOptions
-  ): Promise<
-    [
-      protos.google.appengine.v1.IAuthorizedDomain[],
-      protos.google.appengine.v1.IListAuthorizedDomainsRequest | null,
-      protos.google.appengine.v1.IListAuthorizedDomainsResponse
-    ]
-  >;
+      request: protos.google.appengine.v1.IListAuthorizedDomainsRequest,
+      options?: CallOptions):
+      Promise<[
+        protos.google.appengine.v1.IAuthorizedDomain[],
+        protos.google.appengine.v1.IListAuthorizedDomainsRequest|null,
+        protos.google.appengine.v1.IListAuthorizedDomainsResponse
+      ]>;
   listAuthorizedDomains(
-    request: protos.google.appengine.v1.IListAuthorizedDomainsRequest,
-    options: CallOptions,
-    callback: PaginationCallback<
-      protos.google.appengine.v1.IListAuthorizedDomainsRequest,
-      | protos.google.appengine.v1.IListAuthorizedDomainsResponse
-      | null
-      | undefined,
-      protos.google.appengine.v1.IAuthorizedDomain
-    >
-  ): void;
-  listAuthorizedDomains(
-    request: protos.google.appengine.v1.IListAuthorizedDomainsRequest,
-    callback: PaginationCallback<
-      protos.google.appengine.v1.IListAuthorizedDomainsRequest,
-      | protos.google.appengine.v1.IListAuthorizedDomainsResponse
-      | null
-      | undefined,
-      protos.google.appengine.v1.IAuthorizedDomain
-    >
-  ): void;
-  /**
-   * Lists all domains the user is authorized to administer.
-   *
-   * @param {Object} request
-   *   The request object that will be sent.
-   * @param {string} request.parent
-   *   Name of the parent Application resource. Example: `apps/myapp`.
-   * @param {number} request.pageSize
-   *   Maximum results to return per page.
-   * @param {string} request.pageToken
-   *   Continuation token for fetching the next page of results.
-   * @param {object} [options]
-   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
-   * @returns {Promise} - The promise which resolves to an array.
-   *   The first element of the array is Array of [AuthorizedDomain]{@link google.appengine.v1.AuthorizedDomain}.
-   *   The client library will perform auto-pagination by default: it will call the API as many
-   *   times as needed and will merge results from all the pages into this array.
-   *   Note that it can affect your quota.
-   *   We recommend using `listAuthorizedDomainsAsync()`
-   *   method described below for async iteration which you can stop as needed.
-   *   Please see the
-   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
-   *   for more details and examples.
-   */
-  listAuthorizedDomains(
-    request: protos.google.appengine.v1.IListAuthorizedDomainsRequest,
-    optionsOrCallback?:
-      | CallOptions
-      | PaginationCallback<
+      request: protos.google.appengine.v1.IListAuthorizedDomainsRequest,
+      options: CallOptions,
+      callback: PaginationCallback<
           protos.google.appengine.v1.IListAuthorizedDomainsRequest,
-          | protos.google.appengine.v1.IListAuthorizedDomainsResponse
-          | null
-          | undefined,
-          protos.google.appengine.v1.IAuthorizedDomain
-        >,
-    callback?: PaginationCallback<
-      protos.google.appengine.v1.IListAuthorizedDomainsRequest,
-      | protos.google.appengine.v1.IListAuthorizedDomainsResponse
-      | null
-      | undefined,
-      protos.google.appengine.v1.IAuthorizedDomain
-    >
-  ): Promise<
-    [
-      protos.google.appengine.v1.IAuthorizedDomain[],
-      protos.google.appengine.v1.IListAuthorizedDomainsRequest | null,
-      protos.google.appengine.v1.IListAuthorizedDomainsResponse
-    ]
-  > | void {
+          protos.google.appengine.v1.IListAuthorizedDomainsResponse|null|undefined,
+          protos.google.appengine.v1.IAuthorizedDomain>): void;
+  listAuthorizedDomains(
+      request: protos.google.appengine.v1.IListAuthorizedDomainsRequest,
+      callback: PaginationCallback<
+          protos.google.appengine.v1.IListAuthorizedDomainsRequest,
+          protos.google.appengine.v1.IListAuthorizedDomainsResponse|null|undefined,
+          protos.google.appengine.v1.IAuthorizedDomain>): void;
+/**
+ * Lists all domains the user is authorized to administer.
+ *
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {string} request.parent
+ *   Name of the parent Application resource. Example: `apps/myapp`.
+ * @param {number} request.pageSize
+ *   Maximum results to return per page.
+ * @param {string} request.pageToken
+ *   Continuation token for fetching the next page of results.
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Promise} - The promise which resolves to an array.
+ *   The first element of the array is Array of [AuthorizedDomain]{@link google.appengine.v1.AuthorizedDomain}.
+ *   The client library will perform auto-pagination by default: it will call the API as many
+ *   times as needed and will merge results from all the pages into this array.
+ *   Note that it can affect your quota.
+ *   We recommend using `listAuthorizedDomainsAsync()`
+ *   method described below for async iteration which you can stop as needed.
+ *   Please see the
+ *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
+ *   for more details and examples.
+ */
+  listAuthorizedDomains(
+      request: protos.google.appengine.v1.IListAuthorizedDomainsRequest,
+      optionsOrCallback?: CallOptions|PaginationCallback<
+          protos.google.appengine.v1.IListAuthorizedDomainsRequest,
+          protos.google.appengine.v1.IListAuthorizedDomainsResponse|null|undefined,
+          protos.google.appengine.v1.IAuthorizedDomain>,
+      callback?: PaginationCallback<
+          protos.google.appengine.v1.IListAuthorizedDomainsRequest,
+          protos.google.appengine.v1.IListAuthorizedDomainsResponse|null|undefined,
+          protos.google.appengine.v1.IAuthorizedDomain>):
+      Promise<[
+        protos.google.appengine.v1.IAuthorizedDomain[],
+        protos.google.appengine.v1.IListAuthorizedDomainsRequest|null,
+        protos.google.appengine.v1.IListAuthorizedDomainsResponse
+      ]>|void {
     request = request || {};
     let options: CallOptions;
     if (typeof optionsOrCallback === 'function' && callback === undefined) {
       callback = optionsOrCallback;
       options = {};
-    } else {
+    }
+    else {
       options = optionsOrCallback as CallOptions;
     }
     options = options || {};
@@ -409,38 +369,38 @@ export class AuthorizedDomainsClient {
     options.otherArgs.headers[
       'x-goog-request-params'
     ] = gax.routingHeader.fromParams({
-      parent: request.parent || '',
+      'parent': request.parent || '',
     });
     this.initialize();
     return this.innerApiCalls.listAuthorizedDomains(request, options, callback);
   }
 
-  /**
-   * Equivalent to `method.name.toCamelCase()`, but returns a NodeJS Stream object.
-   * @param {Object} request
-   *   The request object that will be sent.
-   * @param {string} request.parent
-   *   Name of the parent Application resource. Example: `apps/myapp`.
-   * @param {number} request.pageSize
-   *   Maximum results to return per page.
-   * @param {string} request.pageToken
-   *   Continuation token for fetching the next page of results.
-   * @param {object} [options]
-   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
-   * @returns {Stream}
-   *   An object stream which emits an object representing [AuthorizedDomain]{@link google.appengine.v1.AuthorizedDomain} on 'data' event.
-   *   The client library will perform auto-pagination by default: it will call the API as many
-   *   times as needed. Note that it can affect your quota.
-   *   We recommend using `listAuthorizedDomainsAsync()`
-   *   method described below for async iteration which you can stop as needed.
-   *   Please see the
-   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
-   *   for more details and examples.
-   */
+/**
+ * Equivalent to `method.name.toCamelCase()`, but returns a NodeJS Stream object.
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {string} request.parent
+ *   Name of the parent Application resource. Example: `apps/myapp`.
+ * @param {number} request.pageSize
+ *   Maximum results to return per page.
+ * @param {string} request.pageToken
+ *   Continuation token for fetching the next page of results.
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Stream}
+ *   An object stream which emits an object representing [AuthorizedDomain]{@link google.appengine.v1.AuthorizedDomain} on 'data' event.
+ *   The client library will perform auto-pagination by default: it will call the API as many
+ *   times as needed. Note that it can affect your quota.
+ *   We recommend using `listAuthorizedDomainsAsync()`
+ *   method described below for async iteration which you can stop as needed.
+ *   Please see the
+ *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
+ *   for more details and examples.
+ */
   listAuthorizedDomainsStream(
-    request?: protos.google.appengine.v1.IListAuthorizedDomainsRequest,
-    options?: CallOptions
-  ): Transform {
+      request?: protos.google.appengine.v1.IListAuthorizedDomainsRequest,
+      options?: CallOptions):
+    Transform{
     request = request || {};
     options = options || {};
     options.otherArgs = options.otherArgs || {};
@@ -448,7 +408,7 @@ export class AuthorizedDomainsClient {
     options.otherArgs.headers[
       'x-goog-request-params'
     ] = gax.routingHeader.fromParams({
-      parent: request.parent || '',
+      'parent': request.parent || '',
     });
     const callSettings = new gax.CallSettings(options);
     this.initialize();
@@ -459,38 +419,38 @@ export class AuthorizedDomainsClient {
     );
   }
 
-  /**
-   * Equivalent to `listAuthorizedDomains`, but returns an iterable object.
-   *
-   * `for`-`await`-`of` syntax is used with the iterable to get response elements on-demand.
-   * @param {Object} request
-   *   The request object that will be sent.
-   * @param {string} request.parent
-   *   Name of the parent Application resource. Example: `apps/myapp`.
-   * @param {number} request.pageSize
-   *   Maximum results to return per page.
-   * @param {string} request.pageToken
-   *   Continuation token for fetching the next page of results.
-   * @param {object} [options]
-   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
-   * @returns {Object}
-   *   An iterable Object that allows [async iteration](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols).
-   *   When you iterate the returned iterable, each element will be an object representing
-   *   [AuthorizedDomain]{@link google.appengine.v1.AuthorizedDomain}. The API will be called under the hood as needed, once per the page,
-   *   so you can stop the iteration when you don't need more results.
-   *   Please see the
-   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
-   *   for more details and examples.
-   * @example
-   * const iterable = client.listAuthorizedDomainsAsync(request);
-   * for await (const response of iterable) {
-   *   // process response
-   * }
-   */
+/**
+ * Equivalent to `listAuthorizedDomains`, but returns an iterable object.
+ *
+ * `for`-`await`-`of` syntax is used with the iterable to get response elements on-demand.
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {string} request.parent
+ *   Name of the parent Application resource. Example: `apps/myapp`.
+ * @param {number} request.pageSize
+ *   Maximum results to return per page.
+ * @param {string} request.pageToken
+ *   Continuation token for fetching the next page of results.
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Object}
+ *   An iterable Object that allows [async iteration](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols).
+ *   When you iterate the returned iterable, each element will be an object representing
+ *   [AuthorizedDomain]{@link google.appengine.v1.AuthorizedDomain}. The API will be called under the hood as needed, once per the page,
+ *   so you can stop the iteration when you don't need more results.
+ *   Please see the
+ *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
+ *   for more details and examples.
+ * @example
+ * const iterable = client.listAuthorizedDomainsAsync(request);
+ * for await (const response of iterable) {
+ *   // process response
+ * }
+ */
   listAuthorizedDomainsAsync(
-    request?: protos.google.appengine.v1.IListAuthorizedDomainsRequest,
-    options?: CallOptions
-  ): AsyncIterable<protos.google.appengine.v1.IAuthorizedDomain> {
+      request?: protos.google.appengine.v1.IListAuthorizedDomainsRequest,
+      options?: CallOptions):
+    AsyncIterable<protos.google.appengine.v1.IAuthorizedDomain>{
     request = request || {};
     options = options || {};
     options.otherArgs = options.otherArgs || {};
@@ -498,14 +458,14 @@ export class AuthorizedDomainsClient {
     options.otherArgs.headers[
       'x-goog-request-params'
     ] = gax.routingHeader.fromParams({
-      parent: request.parent || '',
+      'parent': request.parent || '',
     });
     options = options || {};
     const callSettings = new gax.CallSettings(options);
     this.initialize();
     return this.descriptors.page.listAuthorizedDomains.asyncIterate(
       this.innerApiCalls['listAuthorizedDomains'] as GaxCall,
-      (request as unknown) as RequestType,
+      request as unknown as RequestType,
       callSettings
     ) as AsyncIterable<protos.google.appengine.v1.IAuthorizedDomain>;
   }
@@ -522,12 +482,7 @@ export class AuthorizedDomainsClient {
    * @param {string} instance
    * @returns {string} Resource name string.
    */
-  instancePath(
-    app: string,
-    service: string,
-    version: string,
-    instance: string
-  ) {
+  instancePath(app:string,service:string,version:string,instance:string) {
     return this.pathTemplates.instancePathTemplate.render({
       app: app,
       service: service,
