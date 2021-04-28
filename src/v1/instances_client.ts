@@ -18,11 +18,19 @@
 
 /* global window */
 import * as gax from 'google-gax';
-import {Callback, CallOptions, Descriptors, ClientOptions, LROperation, PaginationCallback, GaxCall} from 'google-gax';
+import {
+  Callback,
+  CallOptions,
+  Descriptors,
+  ClientOptions,
+  LROperation,
+  PaginationCallback,
+  GaxCall,
+} from 'google-gax';
 import * as path from 'path';
 
-import { Transform } from 'stream';
-import { RequestType } from 'google-gax/build/src/apitypes';
+import {Transform} from 'stream';
+import {RequestType} from 'google-gax/build/src/apitypes';
 import * as protos from '../../protos/protos';
 /**
  * Client JSON configuration object, loaded from
@@ -30,7 +38,7 @@ import * as protos from '../../protos/protos';
  * This file defines retry strategy and timeouts for all API methods in this library.
  */
 import * as gapicConfig from './instances_client_config.json';
-import { operationsProtos } from 'google-gax';
+import {operationsProtos} from 'google-gax';
 const version = require('../../../package.json').version;
 
 /**
@@ -94,10 +102,13 @@ export class InstancesClient {
   constructor(opts?: ClientOptions) {
     // Ensure that options include all the required fields.
     const staticMembers = this.constructor as typeof InstancesClient;
-    const servicePath = opts?.servicePath || opts?.apiEndpoint || staticMembers.servicePath;
+    const servicePath =
+      opts?.servicePath || opts?.apiEndpoint || staticMembers.servicePath;
     const port = opts?.port || staticMembers.port;
     const clientConfig = opts?.clientConfig ?? {};
-    const fallback = opts?.fallback ?? (typeof window !== 'undefined' && typeof window?.fetch === 'function');
+    const fallback =
+      opts?.fallback ??
+      (typeof window !== 'undefined' && typeof window?.fetch === 'function');
     opts = Object.assign({servicePath, port, clientConfig, fallback}, opts);
 
     // If scopes are unset in options and we're connecting to a non-default endpoint, set scopes just in case.
@@ -115,7 +126,7 @@ export class InstancesClient {
     this._opts = opts;
 
     // Save the auth object to the client, for use by other methods.
-    this.auth = (this._gaxGrpc.auth as gax.GoogleAuth);
+    this.auth = this._gaxGrpc.auth as gax.GoogleAuth;
 
     // Set the default scopes in auth client if needed.
     if (servicePath === staticMembers.servicePath) {
@@ -123,10 +134,7 @@ export class InstancesClient {
     }
 
     // Determine the client header string.
-    const clientHeader = [
-      `gax/${this._gaxModule.version}`,
-      `gapic/${version}`,
-    ];
+    const clientHeader = [`gax/${this._gaxModule.version}`, `gapic/${version}`];
     if (typeof process !== 'undefined' && 'versions' in process) {
       clientHeader.push(`gl-node/${process.versions.node}`);
     } else {
@@ -142,12 +150,18 @@ export class InstancesClient {
     // For Node.js, pass the path to JSON proto file.
     // For browsers, pass the JSON content.
 
-    const nodejsProtoPath = path.join(__dirname, '..', '..', 'protos', 'protos.json');
+    const nodejsProtoPath = path.join(
+      __dirname,
+      '..',
+      '..',
+      'protos',
+      'protos.json'
+    );
     this._protos = this._gaxGrpc.loadProto(
-      opts.fallback ?
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        require("../../protos/protos.json") :
-        nodejsProtoPath
+      opts.fallback
+        ? // eslint-disable-next-line @typescript-eslint/no-var-requires
+          require('../../protos/protos.json')
+        : nodejsProtoPath
     );
 
     // This API contains "path templates"; forward-slash-separated
@@ -163,47 +177,62 @@ export class InstancesClient {
     // (e.g. 50 results at a time, with tokens to get subsequent
     // pages). Denote the keys used for pagination and results.
     this.descriptors.page = {
-      listInstances:
-          new this._gaxModule.PageDescriptor('pageToken', 'nextPageToken', 'instances')
+      listInstances: new this._gaxModule.PageDescriptor(
+        'pageToken',
+        'nextPageToken',
+        'instances'
+      ),
     };
 
     // This API contains "long-running operations", which return a
     // an Operation object that allows for tracking of the operation,
     // rather than holding a request open.
-    const protoFilesRoot = opts.fallback ?
-      this._gaxModule.protobuf.Root.fromJSON(
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        require("../../protos/protos.json")) :
-      this._gaxModule.protobuf.loadSync(nodejsProtoPath);
+    const protoFilesRoot = opts.fallback
+      ? this._gaxModule.protobuf.Root.fromJSON(
+          // eslint-disable-next-line @typescript-eslint/no-var-requires
+          require('../../protos/protos.json')
+        )
+      : this._gaxModule.protobuf.loadSync(nodejsProtoPath);
 
-    this.operationsClient = this._gaxModule.lro({
-      auth: this.auth,
-      grpc: 'grpc' in this._gaxGrpc ? this._gaxGrpc.grpc : undefined
-    }).operationsClient(opts);
+    this.operationsClient = this._gaxModule
+      .lro({
+        auth: this.auth,
+        grpc: 'grpc' in this._gaxGrpc ? this._gaxGrpc.grpc : undefined,
+      })
+      .operationsClient(opts);
     const deleteInstanceResponse = protoFilesRoot.lookup(
-      '.google.protobuf.Empty') as gax.protobuf.Type;
+      '.google.protobuf.Empty'
+    ) as gax.protobuf.Type;
     const deleteInstanceMetadata = protoFilesRoot.lookup(
-      '.google.appengine.v1.OperationMetadataV1') as gax.protobuf.Type;
+      '.google.appengine.v1.OperationMetadataV1'
+    ) as gax.protobuf.Type;
     const debugInstanceResponse = protoFilesRoot.lookup(
-      '.google.appengine.v1.Instance') as gax.protobuf.Type;
+      '.google.appengine.v1.Instance'
+    ) as gax.protobuf.Type;
     const debugInstanceMetadata = protoFilesRoot.lookup(
-      '.google.appengine.v1.OperationMetadataV1') as gax.protobuf.Type;
+      '.google.appengine.v1.OperationMetadataV1'
+    ) as gax.protobuf.Type;
 
     this.descriptors.longrunning = {
       deleteInstance: new this._gaxModule.LongrunningDescriptor(
         this.operationsClient,
         deleteInstanceResponse.decode.bind(deleteInstanceResponse),
-        deleteInstanceMetadata.decode.bind(deleteInstanceMetadata)),
+        deleteInstanceMetadata.decode.bind(deleteInstanceMetadata)
+      ),
       debugInstance: new this._gaxModule.LongrunningDescriptor(
         this.operationsClient,
         debugInstanceResponse.decode.bind(debugInstanceResponse),
-        debugInstanceMetadata.decode.bind(debugInstanceMetadata))
+        debugInstanceMetadata.decode.bind(debugInstanceMetadata)
+      ),
     };
 
     // Put together the default options sent with requests.
     this._defaults = this._gaxGrpc.constructSettings(
-        'google.appengine.v1.Instances', gapicConfig as gax.ClientConfig,
-        opts.clientConfig || {}, {'x-goog-api-client': clientHeader.join(' ')});
+      'google.appengine.v1.Instances',
+      gapicConfig as gax.ClientConfig,
+      opts.clientConfig || {},
+      {'x-goog-api-client': clientHeader.join(' ')}
+    );
 
     // Set up a dictionary of "inner API calls"; the core implementation
     // of calling the API is handled in `google-gax`, with this code
@@ -231,16 +260,23 @@ export class InstancesClient {
     // Put together the "service stub" for
     // google.appengine.v1.Instances.
     this.instancesStub = this._gaxGrpc.createStub(
-        this._opts.fallback ?
-          (this._protos as protobuf.Root).lookupService('google.appengine.v1.Instances') :
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      this._opts.fallback
+        ? (this._protos as protobuf.Root).lookupService(
+            'google.appengine.v1.Instances'
+          )
+        : // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (this._protos as any).google.appengine.v1.Instances,
-        this._opts) as Promise<{[method: string]: Function}>;
+      this._opts
+    ) as Promise<{[method: string]: Function}>;
 
     // Iterate over each of the methods that the service provides
     // and create an API call method for each.
-    const instancesStubMethods =
-        ['listInstances', 'getInstance', 'deleteInstance', 'debugInstance'];
+    const instancesStubMethods = [
+      'listInstances',
+      'getInstance',
+      'deleteInstance',
+      'debugInstance',
+    ];
     for (const methodName of instancesStubMethods) {
       const callPromise = this.instancesStub.then(
         stub => (...args: Array<{}>) => {
@@ -250,9 +286,10 @@ export class InstancesClient {
           const func = stub[methodName];
           return func.apply(stub, args);
         },
-        (err: Error|null|undefined) => () => {
+        (err: Error | null | undefined) => () => {
           throw err;
-        });
+        }
+      );
 
       const descriptor =
         this.descriptors.page[methodName] ||
@@ -304,7 +341,7 @@ export class InstancesClient {
     return [
       'https://www.googleapis.com/auth/appengine.admin',
       'https://www.googleapis.com/auth/cloud-platform',
-      'https://www.googleapis.com/auth/cloud-platform.read-only'
+      'https://www.googleapis.com/auth/cloud-platform.read-only',
     ];
   }
 
@@ -314,8 +351,9 @@ export class InstancesClient {
    * Return the project ID used by this class.
    * @returns {Promise} A promise that resolves to string containing the project ID.
    */
-  getProjectId(callback?: Callback<string, undefined, undefined>):
-      Promise<string>|void {
+  getProjectId(
+    callback?: Callback<string, undefined, undefined>
+  ): Promise<string> | void {
     if (callback) {
       this.auth.getProjectId(callback);
       return;
@@ -327,64 +365,77 @@ export class InstancesClient {
   // -- Service calls --
   // -------------------
   getInstance(
-      request: protos.google.appengine.v1.IGetInstanceRequest,
-      options?: CallOptions):
-      Promise<[
-        protos.google.appengine.v1.IInstance,
-        protos.google.appengine.v1.IGetInstanceRequest|undefined, {}|undefined
-      ]>;
+    request: protos.google.appengine.v1.IGetInstanceRequest,
+    options?: CallOptions
+  ): Promise<
+    [
+      protos.google.appengine.v1.IInstance,
+      protos.google.appengine.v1.IGetInstanceRequest | undefined,
+      {} | undefined
+    ]
+  >;
   getInstance(
-      request: protos.google.appengine.v1.IGetInstanceRequest,
-      options: CallOptions,
-      callback: Callback<
-          protos.google.appengine.v1.IInstance,
-          protos.google.appengine.v1.IGetInstanceRequest|null|undefined,
-          {}|null|undefined>): void;
+    request: protos.google.appengine.v1.IGetInstanceRequest,
+    options: CallOptions,
+    callback: Callback<
+      protos.google.appengine.v1.IInstance,
+      protos.google.appengine.v1.IGetInstanceRequest | null | undefined,
+      {} | null | undefined
+    >
+  ): void;
   getInstance(
-      request: protos.google.appengine.v1.IGetInstanceRequest,
-      callback: Callback<
-          protos.google.appengine.v1.IInstance,
-          protos.google.appengine.v1.IGetInstanceRequest|null|undefined,
-          {}|null|undefined>): void;
-/**
- * Gets instance information.
- *
- * @param {Object} request
- *   The request object that will be sent.
- * @param {string} request.name
- *   Name of the resource requested. Example:
- *   `apps/myapp/services/default/versions/v1/instances/instance-1`.
- * @param {object} [options]
- *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
- * @returns {Promise} - The promise which resolves to an array.
- *   The first element of the array is an object representing [Instance]{@link google.appengine.v1.Instance}.
- *   Please see the
- *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
- *   for more details and examples.
- * @example
- * const [response] = await client.getInstance(request);
- */
+    request: protos.google.appengine.v1.IGetInstanceRequest,
+    callback: Callback<
+      protos.google.appengine.v1.IInstance,
+      protos.google.appengine.v1.IGetInstanceRequest | null | undefined,
+      {} | null | undefined
+    >
+  ): void;
+  /**
+   * Gets instance information.
+   *
+   * @param {Object} request
+   *   The request object that will be sent.
+   * @param {string} request.name
+   *   Name of the resource requested. Example:
+   *   `apps/myapp/services/default/versions/v1/instances/instance-1`.
+   * @param {object} [options]
+   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+   * @returns {Promise} - The promise which resolves to an array.
+   *   The first element of the array is an object representing [Instance]{@link google.appengine.v1.Instance}.
+   *   Please see the
+   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods)
+   *   for more details and examples.
+   * @example
+   * const [response] = await client.getInstance(request);
+   */
   getInstance(
-      request: protos.google.appengine.v1.IGetInstanceRequest,
-      optionsOrCallback?: CallOptions|Callback<
+    request: protos.google.appengine.v1.IGetInstanceRequest,
+    optionsOrCallback?:
+      | CallOptions
+      | Callback<
           protos.google.appengine.v1.IInstance,
-          protos.google.appengine.v1.IGetInstanceRequest|null|undefined,
-          {}|null|undefined>,
-      callback?: Callback<
-          protos.google.appengine.v1.IInstance,
-          protos.google.appengine.v1.IGetInstanceRequest|null|undefined,
-          {}|null|undefined>):
-      Promise<[
-        protos.google.appengine.v1.IInstance,
-        protos.google.appengine.v1.IGetInstanceRequest|undefined, {}|undefined
-      ]>|void {
+          protos.google.appengine.v1.IGetInstanceRequest | null | undefined,
+          {} | null | undefined
+        >,
+    callback?: Callback<
+      protos.google.appengine.v1.IInstance,
+      protos.google.appengine.v1.IGetInstanceRequest | null | undefined,
+      {} | null | undefined
+    >
+  ): Promise<
+    [
+      protos.google.appengine.v1.IInstance,
+      protos.google.appengine.v1.IGetInstanceRequest | undefined,
+      {} | undefined
+    ]
+  > | void {
     request = request || {};
     let options: CallOptions;
     if (typeof optionsOrCallback === 'function' && callback === undefined) {
       callback = optionsOrCallback;
       options = {};
-    }
-    else {
+    } else {
       options = optionsOrCallback as CallOptions;
     }
     options = options || {};
@@ -393,85 +444,116 @@ export class InstancesClient {
     options.otherArgs.headers[
       'x-goog-request-params'
     ] = gax.routingHeader.fromParams({
-      'name': request.name || '',
+      name: request.name || '',
     });
     this.initialize();
     return this.innerApiCalls.getInstance(request, options, callback);
   }
 
   deleteInstance(
-      request: protos.google.appengine.v1.IDeleteInstanceRequest,
-      options?: CallOptions):
-      Promise<[
-        LROperation<protos.google.protobuf.IEmpty, protos.google.appengine.v1.IOperationMetadataV1>,
-        protos.google.longrunning.IOperation|undefined, {}|undefined
-      ]>;
+    request: protos.google.appengine.v1.IDeleteInstanceRequest,
+    options?: CallOptions
+  ): Promise<
+    [
+      LROperation<
+        protos.google.protobuf.IEmpty,
+        protos.google.appengine.v1.IOperationMetadataV1
+      >,
+      protos.google.longrunning.IOperation | undefined,
+      {} | undefined
+    ]
+  >;
   deleteInstance(
-      request: protos.google.appengine.v1.IDeleteInstanceRequest,
-      options: CallOptions,
-      callback: Callback<
-          LROperation<protos.google.protobuf.IEmpty, protos.google.appengine.v1.IOperationMetadataV1>,
-          protos.google.longrunning.IOperation|null|undefined,
-          {}|null|undefined>): void;
+    request: protos.google.appengine.v1.IDeleteInstanceRequest,
+    options: CallOptions,
+    callback: Callback<
+      LROperation<
+        protos.google.protobuf.IEmpty,
+        protos.google.appengine.v1.IOperationMetadataV1
+      >,
+      protos.google.longrunning.IOperation | null | undefined,
+      {} | null | undefined
+    >
+  ): void;
   deleteInstance(
-      request: protos.google.appengine.v1.IDeleteInstanceRequest,
-      callback: Callback<
-          LROperation<protos.google.protobuf.IEmpty, protos.google.appengine.v1.IOperationMetadataV1>,
-          protos.google.longrunning.IOperation|null|undefined,
-          {}|null|undefined>): void;
-/**
- * Stops a running instance.
- *
- * The instance might be automatically recreated based on the scaling settings
- * of the version. For more information, see "How Instances are Managed"
- * ([standard environment](https://cloud.google.com/appengine/docs/standard/python/how-instances-are-managed) |
- * [flexible environment](https://cloud.google.com/appengine/docs/flexible/python/how-instances-are-managed)).
- *
- * To ensure that instances are not re-created and avoid getting billed, you
- * can stop all instances within the target version by changing the serving
- * status of the version to `STOPPED` with the
- * [`apps.services.versions.patch`](https://cloud.google.com/appengine/docs/admin-api/reference/rest/v1/apps.services.versions/patch)
- * method.
- *
- * @param {Object} request
- *   The request object that will be sent.
- * @param {string} request.name
- *   Name of the resource requested. Example:
- *   `apps/myapp/services/default/versions/v1/instances/instance-1`.
- * @param {object} [options]
- *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
- * @returns {Promise} - The promise which resolves to an array.
- *   The first element of the array is an object representing
- *   a long running operation. Its `promise()` method returns a promise
- *   you can `await` for.
- *   Please see the
- *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#long-running-operations)
- *   for more details and examples.
- * @example
- * const [operation] = await client.deleteInstance(request);
- * const [response] = await operation.promise();
- */
+    request: protos.google.appengine.v1.IDeleteInstanceRequest,
+    callback: Callback<
+      LROperation<
+        protos.google.protobuf.IEmpty,
+        protos.google.appengine.v1.IOperationMetadataV1
+      >,
+      protos.google.longrunning.IOperation | null | undefined,
+      {} | null | undefined
+    >
+  ): void;
+  /**
+   * Stops a running instance.
+   *
+   * The instance might be automatically recreated based on the scaling settings
+   * of the version. For more information, see "How Instances are Managed"
+   * ([standard environment](https://cloud.google.com/appengine/docs/standard/python/how-instances-are-managed) |
+   * [flexible environment](https://cloud.google.com/appengine/docs/flexible/python/how-instances-are-managed)).
+   *
+   * To ensure that instances are not re-created and avoid getting billed, you
+   * can stop all instances within the target version by changing the serving
+   * status of the version to `STOPPED` with the
+   * [`apps.services.versions.patch`](https://cloud.google.com/appengine/docs/admin-api/reference/rest/v1/apps.services.versions/patch)
+   * method.
+   *
+   * @param {Object} request
+   *   The request object that will be sent.
+   * @param {string} request.name
+   *   Name of the resource requested. Example:
+   *   `apps/myapp/services/default/versions/v1/instances/instance-1`.
+   * @param {object} [options]
+   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+   * @returns {Promise} - The promise which resolves to an array.
+   *   The first element of the array is an object representing
+   *   a long running operation. Its `promise()` method returns a promise
+   *   you can `await` for.
+   *   Please see the
+   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#long-running-operations)
+   *   for more details and examples.
+   * @example
+   * const [operation] = await client.deleteInstance(request);
+   * const [response] = await operation.promise();
+   */
   deleteInstance(
-      request: protos.google.appengine.v1.IDeleteInstanceRequest,
-      optionsOrCallback?: CallOptions|Callback<
-          LROperation<protos.google.protobuf.IEmpty, protos.google.appengine.v1.IOperationMetadataV1>,
-          protos.google.longrunning.IOperation|null|undefined,
-          {}|null|undefined>,
-      callback?: Callback<
-          LROperation<protos.google.protobuf.IEmpty, protos.google.appengine.v1.IOperationMetadataV1>,
-          protos.google.longrunning.IOperation|null|undefined,
-          {}|null|undefined>):
-      Promise<[
-        LROperation<protos.google.protobuf.IEmpty, protos.google.appengine.v1.IOperationMetadataV1>,
-        protos.google.longrunning.IOperation|undefined, {}|undefined
-      ]>|void {
+    request: protos.google.appengine.v1.IDeleteInstanceRequest,
+    optionsOrCallback?:
+      | CallOptions
+      | Callback<
+          LROperation<
+            protos.google.protobuf.IEmpty,
+            protos.google.appengine.v1.IOperationMetadataV1
+          >,
+          protos.google.longrunning.IOperation | null | undefined,
+          {} | null | undefined
+        >,
+    callback?: Callback<
+      LROperation<
+        protos.google.protobuf.IEmpty,
+        protos.google.appengine.v1.IOperationMetadataV1
+      >,
+      protos.google.longrunning.IOperation | null | undefined,
+      {} | null | undefined
+    >
+  ): Promise<
+    [
+      LROperation<
+        protos.google.protobuf.IEmpty,
+        protos.google.appengine.v1.IOperationMetadataV1
+      >,
+      protos.google.longrunning.IOperation | undefined,
+      {} | undefined
+    ]
+  > | void {
     request = request || {};
     let options: CallOptions;
     if (typeof optionsOrCallback === 'function' && callback === undefined) {
       callback = optionsOrCallback;
       options = {};
-    }
-    else {
+    } else {
       options = optionsOrCallback as CallOptions;
     }
     options = options || {};
@@ -480,109 +562,156 @@ export class InstancesClient {
     options.otherArgs.headers[
       'x-goog-request-params'
     ] = gax.routingHeader.fromParams({
-      'name': request.name || '',
+      name: request.name || '',
     });
     this.initialize();
     return this.innerApiCalls.deleteInstance(request, options, callback);
   }
-/**
- * Check the status of the long running operation returned by `deleteInstance()`.
- * @param {String} name
- *   The operation name that will be passed.
- * @returns {Promise} - The promise which resolves to an object.
- *   The decoded operation object has result and metadata field to get information from.
- *   Please see the
- *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#long-running-operations)
- *   for more details and examples.
- * @example
- * const decodedOperation = await checkDeleteInstanceProgress(name);
- * console.log(decodedOperation.result);
- * console.log(decodedOperation.done);
- * console.log(decodedOperation.metadata);
- */
-  async checkDeleteInstanceProgress(name: string): Promise<LROperation<protos.google.protobuf.Empty, protos.google.appengine.v1.OperationMetadataV1>>{
-    const request = new operationsProtos.google.longrunning.GetOperationRequest({name});
+  /**
+   * Check the status of the long running operation returned by `deleteInstance()`.
+   * @param {String} name
+   *   The operation name that will be passed.
+   * @returns {Promise} - The promise which resolves to an object.
+   *   The decoded operation object has result and metadata field to get information from.
+   *   Please see the
+   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#long-running-operations)
+   *   for more details and examples.
+   * @example
+   * const decodedOperation = await checkDeleteInstanceProgress(name);
+   * console.log(decodedOperation.result);
+   * console.log(decodedOperation.done);
+   * console.log(decodedOperation.metadata);
+   */
+  async checkDeleteInstanceProgress(
+    name: string
+  ): Promise<
+    LROperation<
+      protos.google.protobuf.Empty,
+      protos.google.appengine.v1.OperationMetadataV1
+    >
+  > {
+    const request = new operationsProtos.google.longrunning.GetOperationRequest(
+      {name}
+    );
     const [operation] = await this.operationsClient.getOperation(request);
-    const decodeOperation = new gax.Operation(operation, this.descriptors.longrunning.deleteInstance, gax.createDefaultBackoffSettings());
-    return decodeOperation as LROperation<protos.google.protobuf.Empty, protos.google.appengine.v1.OperationMetadataV1>;
+    const decodeOperation = new gax.Operation(
+      operation,
+      this.descriptors.longrunning.deleteInstance,
+      gax.createDefaultBackoffSettings()
+    );
+    return decodeOperation as LROperation<
+      protos.google.protobuf.Empty,
+      protos.google.appengine.v1.OperationMetadataV1
+    >;
   }
   debugInstance(
-      request: protos.google.appengine.v1.IDebugInstanceRequest,
-      options?: CallOptions):
-      Promise<[
-        LROperation<protos.google.appengine.v1.IInstance, protos.google.appengine.v1.IOperationMetadataV1>,
-        protos.google.longrunning.IOperation|undefined, {}|undefined
-      ]>;
+    request: protos.google.appengine.v1.IDebugInstanceRequest,
+    options?: CallOptions
+  ): Promise<
+    [
+      LROperation<
+        protos.google.appengine.v1.IInstance,
+        protos.google.appengine.v1.IOperationMetadataV1
+      >,
+      protos.google.longrunning.IOperation | undefined,
+      {} | undefined
+    ]
+  >;
   debugInstance(
-      request: protos.google.appengine.v1.IDebugInstanceRequest,
-      options: CallOptions,
-      callback: Callback<
-          LROperation<protos.google.appengine.v1.IInstance, protos.google.appengine.v1.IOperationMetadataV1>,
-          protos.google.longrunning.IOperation|null|undefined,
-          {}|null|undefined>): void;
+    request: protos.google.appengine.v1.IDebugInstanceRequest,
+    options: CallOptions,
+    callback: Callback<
+      LROperation<
+        protos.google.appengine.v1.IInstance,
+        protos.google.appengine.v1.IOperationMetadataV1
+      >,
+      protos.google.longrunning.IOperation | null | undefined,
+      {} | null | undefined
+    >
+  ): void;
   debugInstance(
-      request: protos.google.appengine.v1.IDebugInstanceRequest,
-      callback: Callback<
-          LROperation<protos.google.appengine.v1.IInstance, protos.google.appengine.v1.IOperationMetadataV1>,
-          protos.google.longrunning.IOperation|null|undefined,
-          {}|null|undefined>): void;
-/**
- * Enables debugging on a VM instance. This allows you to use the SSH
- * command to connect to the virtual machine where the instance lives.
- * While in "debug mode", the instance continues to serve live traffic.
- * You should delete the instance when you are done debugging and then
- * allow the system to take over and determine if another instance
- * should be started.
- *
- * Only applicable for instances in App Engine flexible environment.
- *
- * @param {Object} request
- *   The request object that will be sent.
- * @param {string} request.name
- *   Name of the resource requested. Example:
- *   `apps/myapp/services/default/versions/v1/instances/instance-1`.
- * @param {string} request.sshKey
- *   Public SSH key to add to the instance. Examples:
- *
- *   * `[USERNAME]:ssh-rsa [KEY_VALUE] [USERNAME]`
- *   * `[USERNAME]:ssh-rsa [KEY_VALUE] google-ssh {"userName":"[USERNAME]","expireOn":"[EXPIRE_TIME]"}`
- *
- *   For more information, see
- *   [Adding and Removing SSH Keys](https://cloud.google.com/compute/docs/instances/adding-removing-ssh-keys).
- * @param {object} [options]
- *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
- * @returns {Promise} - The promise which resolves to an array.
- *   The first element of the array is an object representing
- *   a long running operation. Its `promise()` method returns a promise
- *   you can `await` for.
- *   Please see the
- *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#long-running-operations)
- *   for more details and examples.
- * @example
- * const [operation] = await client.debugInstance(request);
- * const [response] = await operation.promise();
- */
+    request: protos.google.appengine.v1.IDebugInstanceRequest,
+    callback: Callback<
+      LROperation<
+        protos.google.appengine.v1.IInstance,
+        protos.google.appengine.v1.IOperationMetadataV1
+      >,
+      protos.google.longrunning.IOperation | null | undefined,
+      {} | null | undefined
+    >
+  ): void;
+  /**
+   * Enables debugging on a VM instance. This allows you to use the SSH
+   * command to connect to the virtual machine where the instance lives.
+   * While in "debug mode", the instance continues to serve live traffic.
+   * You should delete the instance when you are done debugging and then
+   * allow the system to take over and determine if another instance
+   * should be started.
+   *
+   * Only applicable for instances in App Engine flexible environment.
+   *
+   * @param {Object} request
+   *   The request object that will be sent.
+   * @param {string} request.name
+   *   Name of the resource requested. Example:
+   *   `apps/myapp/services/default/versions/v1/instances/instance-1`.
+   * @param {string} request.sshKey
+   *   Public SSH key to add to the instance. Examples:
+   *
+   *   * `[USERNAME]:ssh-rsa [KEY_VALUE] [USERNAME]`
+   *   * `[USERNAME]:ssh-rsa [KEY_VALUE] google-ssh {"userName":"[USERNAME]","expireOn":"[EXPIRE_TIME]"}`
+   *
+   *   For more information, see
+   *   [Adding and Removing SSH Keys](https://cloud.google.com/compute/docs/instances/adding-removing-ssh-keys).
+   * @param {object} [options]
+   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+   * @returns {Promise} - The promise which resolves to an array.
+   *   The first element of the array is an object representing
+   *   a long running operation. Its `promise()` method returns a promise
+   *   you can `await` for.
+   *   Please see the
+   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#long-running-operations)
+   *   for more details and examples.
+   * @example
+   * const [operation] = await client.debugInstance(request);
+   * const [response] = await operation.promise();
+   */
   debugInstance(
-      request: protos.google.appengine.v1.IDebugInstanceRequest,
-      optionsOrCallback?: CallOptions|Callback<
-          LROperation<protos.google.appengine.v1.IInstance, protos.google.appengine.v1.IOperationMetadataV1>,
-          protos.google.longrunning.IOperation|null|undefined,
-          {}|null|undefined>,
-      callback?: Callback<
-          LROperation<protos.google.appengine.v1.IInstance, protos.google.appengine.v1.IOperationMetadataV1>,
-          protos.google.longrunning.IOperation|null|undefined,
-          {}|null|undefined>):
-      Promise<[
-        LROperation<protos.google.appengine.v1.IInstance, protos.google.appengine.v1.IOperationMetadataV1>,
-        protos.google.longrunning.IOperation|undefined, {}|undefined
-      ]>|void {
+    request: protos.google.appengine.v1.IDebugInstanceRequest,
+    optionsOrCallback?:
+      | CallOptions
+      | Callback<
+          LROperation<
+            protos.google.appengine.v1.IInstance,
+            protos.google.appengine.v1.IOperationMetadataV1
+          >,
+          protos.google.longrunning.IOperation | null | undefined,
+          {} | null | undefined
+        >,
+    callback?: Callback<
+      LROperation<
+        protos.google.appengine.v1.IInstance,
+        protos.google.appengine.v1.IOperationMetadataV1
+      >,
+      protos.google.longrunning.IOperation | null | undefined,
+      {} | null | undefined
+    >
+  ): Promise<
+    [
+      LROperation<
+        protos.google.appengine.v1.IInstance,
+        protos.google.appengine.v1.IOperationMetadataV1
+      >,
+      protos.google.longrunning.IOperation | undefined,
+      {} | undefined
+    ]
+  > | void {
     request = request || {};
     let options: CallOptions;
     if (typeof optionsOrCallback === 'function' && callback === undefined) {
       callback = optionsOrCallback;
       options = {};
-    }
-    else {
+    } else {
       options = optionsOrCallback as CallOptions;
     }
     options = options || {};
@@ -591,103 +720,130 @@ export class InstancesClient {
     options.otherArgs.headers[
       'x-goog-request-params'
     ] = gax.routingHeader.fromParams({
-      'name': request.name || '',
+      name: request.name || '',
     });
     this.initialize();
     return this.innerApiCalls.debugInstance(request, options, callback);
   }
-/**
- * Check the status of the long running operation returned by `debugInstance()`.
- * @param {String} name
- *   The operation name that will be passed.
- * @returns {Promise} - The promise which resolves to an object.
- *   The decoded operation object has result and metadata field to get information from.
- *   Please see the
- *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#long-running-operations)
- *   for more details and examples.
- * @example
- * const decodedOperation = await checkDebugInstanceProgress(name);
- * console.log(decodedOperation.result);
- * console.log(decodedOperation.done);
- * console.log(decodedOperation.metadata);
- */
-  async checkDebugInstanceProgress(name: string): Promise<LROperation<protos.google.appengine.v1.Instance, protos.google.appengine.v1.OperationMetadataV1>>{
-    const request = new operationsProtos.google.longrunning.GetOperationRequest({name});
+  /**
+   * Check the status of the long running operation returned by `debugInstance()`.
+   * @param {String} name
+   *   The operation name that will be passed.
+   * @returns {Promise} - The promise which resolves to an object.
+   *   The decoded operation object has result and metadata field to get information from.
+   *   Please see the
+   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#long-running-operations)
+   *   for more details and examples.
+   * @example
+   * const decodedOperation = await checkDebugInstanceProgress(name);
+   * console.log(decodedOperation.result);
+   * console.log(decodedOperation.done);
+   * console.log(decodedOperation.metadata);
+   */
+  async checkDebugInstanceProgress(
+    name: string
+  ): Promise<
+    LROperation<
+      protos.google.appengine.v1.Instance,
+      protos.google.appengine.v1.OperationMetadataV1
+    >
+  > {
+    const request = new operationsProtos.google.longrunning.GetOperationRequest(
+      {name}
+    );
     const [operation] = await this.operationsClient.getOperation(request);
-    const decodeOperation = new gax.Operation(operation, this.descriptors.longrunning.debugInstance, gax.createDefaultBackoffSettings());
-    return decodeOperation as LROperation<protos.google.appengine.v1.Instance, protos.google.appengine.v1.OperationMetadataV1>;
+    const decodeOperation = new gax.Operation(
+      operation,
+      this.descriptors.longrunning.debugInstance,
+      gax.createDefaultBackoffSettings()
+    );
+    return decodeOperation as LROperation<
+      protos.google.appengine.v1.Instance,
+      protos.google.appengine.v1.OperationMetadataV1
+    >;
   }
   listInstances(
-      request: protos.google.appengine.v1.IListInstancesRequest,
-      options?: CallOptions):
-      Promise<[
-        protos.google.appengine.v1.IInstance[],
-        protos.google.appengine.v1.IListInstancesRequest|null,
-        protos.google.appengine.v1.IListInstancesResponse
-      ]>;
+    request: protos.google.appengine.v1.IListInstancesRequest,
+    options?: CallOptions
+  ): Promise<
+    [
+      protos.google.appengine.v1.IInstance[],
+      protos.google.appengine.v1.IListInstancesRequest | null,
+      protos.google.appengine.v1.IListInstancesResponse
+    ]
+  >;
   listInstances(
-      request: protos.google.appengine.v1.IListInstancesRequest,
-      options: CallOptions,
-      callback: PaginationCallback<
-          protos.google.appengine.v1.IListInstancesRequest,
-          protos.google.appengine.v1.IListInstancesResponse|null|undefined,
-          protos.google.appengine.v1.IInstance>): void;
+    request: protos.google.appengine.v1.IListInstancesRequest,
+    options: CallOptions,
+    callback: PaginationCallback<
+      protos.google.appengine.v1.IListInstancesRequest,
+      protos.google.appengine.v1.IListInstancesResponse | null | undefined,
+      protos.google.appengine.v1.IInstance
+    >
+  ): void;
   listInstances(
-      request: protos.google.appengine.v1.IListInstancesRequest,
-      callback: PaginationCallback<
-          protos.google.appengine.v1.IListInstancesRequest,
-          protos.google.appengine.v1.IListInstancesResponse|null|undefined,
-          protos.google.appengine.v1.IInstance>): void;
-/**
- * Lists the instances of a version.
- *
- * Tip: To aggregate details about instances over time, see the
- * [Stackdriver Monitoring API](https://cloud.google.com/monitoring/api/ref_v3/rest/v3/projects.timeSeries/list).
- *
- * @param {Object} request
- *   The request object that will be sent.
- * @param {string} request.parent
- *   Name of the parent Version resource. Example:
- *   `apps/myapp/services/default/versions/v1`.
- * @param {number} request.pageSize
- *   Maximum results to return per page.
- * @param {string} request.pageToken
- *   Continuation token for fetching the next page of results.
- * @param {object} [options]
- *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
- * @returns {Promise} - The promise which resolves to an array.
- *   The first element of the array is Array of [Instance]{@link google.appengine.v1.Instance}.
- *   The client library will perform auto-pagination by default: it will call the API as many
- *   times as needed and will merge results from all the pages into this array.
- *   Note that it can affect your quota.
- *   We recommend using `listInstancesAsync()`
- *   method described below for async iteration which you can stop as needed.
- *   Please see the
- *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
- *   for more details and examples.
- */
+    request: protos.google.appengine.v1.IListInstancesRequest,
+    callback: PaginationCallback<
+      protos.google.appengine.v1.IListInstancesRequest,
+      protos.google.appengine.v1.IListInstancesResponse | null | undefined,
+      protos.google.appengine.v1.IInstance
+    >
+  ): void;
+  /**
+   * Lists the instances of a version.
+   *
+   * Tip: To aggregate details about instances over time, see the
+   * [Stackdriver Monitoring API](https://cloud.google.com/monitoring/api/ref_v3/rest/v3/projects.timeSeries/list).
+   *
+   * @param {Object} request
+   *   The request object that will be sent.
+   * @param {string} request.parent
+   *   Name of the parent Version resource. Example:
+   *   `apps/myapp/services/default/versions/v1`.
+   * @param {number} request.pageSize
+   *   Maximum results to return per page.
+   * @param {string} request.pageToken
+   *   Continuation token for fetching the next page of results.
+   * @param {object} [options]
+   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+   * @returns {Promise} - The promise which resolves to an array.
+   *   The first element of the array is Array of [Instance]{@link google.appengine.v1.Instance}.
+   *   The client library will perform auto-pagination by default: it will call the API as many
+   *   times as needed and will merge results from all the pages into this array.
+   *   Note that it can affect your quota.
+   *   We recommend using `listInstancesAsync()`
+   *   method described below for async iteration which you can stop as needed.
+   *   Please see the
+   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
+   *   for more details and examples.
+   */
   listInstances(
-      request: protos.google.appengine.v1.IListInstancesRequest,
-      optionsOrCallback?: CallOptions|PaginationCallback<
+    request: protos.google.appengine.v1.IListInstancesRequest,
+    optionsOrCallback?:
+      | CallOptions
+      | PaginationCallback<
           protos.google.appengine.v1.IListInstancesRequest,
-          protos.google.appengine.v1.IListInstancesResponse|null|undefined,
-          protos.google.appengine.v1.IInstance>,
-      callback?: PaginationCallback<
-          protos.google.appengine.v1.IListInstancesRequest,
-          protos.google.appengine.v1.IListInstancesResponse|null|undefined,
-          protos.google.appengine.v1.IInstance>):
-      Promise<[
-        protos.google.appengine.v1.IInstance[],
-        protos.google.appengine.v1.IListInstancesRequest|null,
-        protos.google.appengine.v1.IListInstancesResponse
-      ]>|void {
+          protos.google.appengine.v1.IListInstancesResponse | null | undefined,
+          protos.google.appengine.v1.IInstance
+        >,
+    callback?: PaginationCallback<
+      protos.google.appengine.v1.IListInstancesRequest,
+      protos.google.appengine.v1.IListInstancesResponse | null | undefined,
+      protos.google.appengine.v1.IInstance
+    >
+  ): Promise<
+    [
+      protos.google.appengine.v1.IInstance[],
+      protos.google.appengine.v1.IListInstancesRequest | null,
+      protos.google.appengine.v1.IListInstancesResponse
+    ]
+  > | void {
     request = request || {};
     let options: CallOptions;
     if (typeof optionsOrCallback === 'function' && callback === undefined) {
       callback = optionsOrCallback;
       options = {};
-    }
-    else {
+    } else {
       options = optionsOrCallback as CallOptions;
     }
     options = options || {};
@@ -696,39 +852,39 @@ export class InstancesClient {
     options.otherArgs.headers[
       'x-goog-request-params'
     ] = gax.routingHeader.fromParams({
-      'parent': request.parent || '',
+      parent: request.parent || '',
     });
     this.initialize();
     return this.innerApiCalls.listInstances(request, options, callback);
   }
 
-/**
- * Equivalent to `method.name.toCamelCase()`, but returns a NodeJS Stream object.
- * @param {Object} request
- *   The request object that will be sent.
- * @param {string} request.parent
- *   Name of the parent Version resource. Example:
- *   `apps/myapp/services/default/versions/v1`.
- * @param {number} request.pageSize
- *   Maximum results to return per page.
- * @param {string} request.pageToken
- *   Continuation token for fetching the next page of results.
- * @param {object} [options]
- *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
- * @returns {Stream}
- *   An object stream which emits an object representing [Instance]{@link google.appengine.v1.Instance} on 'data' event.
- *   The client library will perform auto-pagination by default: it will call the API as many
- *   times as needed. Note that it can affect your quota.
- *   We recommend using `listInstancesAsync()`
- *   method described below for async iteration which you can stop as needed.
- *   Please see the
- *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
- *   for more details and examples.
- */
+  /**
+   * Equivalent to `method.name.toCamelCase()`, but returns a NodeJS Stream object.
+   * @param {Object} request
+   *   The request object that will be sent.
+   * @param {string} request.parent
+   *   Name of the parent Version resource. Example:
+   *   `apps/myapp/services/default/versions/v1`.
+   * @param {number} request.pageSize
+   *   Maximum results to return per page.
+   * @param {string} request.pageToken
+   *   Continuation token for fetching the next page of results.
+   * @param {object} [options]
+   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+   * @returns {Stream}
+   *   An object stream which emits an object representing [Instance]{@link google.appengine.v1.Instance} on 'data' event.
+   *   The client library will perform auto-pagination by default: it will call the API as many
+   *   times as needed. Note that it can affect your quota.
+   *   We recommend using `listInstancesAsync()`
+   *   method described below for async iteration which you can stop as needed.
+   *   Please see the
+   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
+   *   for more details and examples.
+   */
   listInstancesStream(
-      request?: protos.google.appengine.v1.IListInstancesRequest,
-      options?: CallOptions):
-    Transform{
+    request?: protos.google.appengine.v1.IListInstancesRequest,
+    options?: CallOptions
+  ): Transform {
     request = request || {};
     options = options || {};
     options.otherArgs = options.otherArgs || {};
@@ -736,7 +892,7 @@ export class InstancesClient {
     options.otherArgs.headers[
       'x-goog-request-params'
     ] = gax.routingHeader.fromParams({
-      'parent': request.parent || '',
+      parent: request.parent || '',
     });
     const callSettings = new gax.CallSettings(options);
     this.initialize();
@@ -747,39 +903,39 @@ export class InstancesClient {
     );
   }
 
-/**
- * Equivalent to `listInstances`, but returns an iterable object.
- *
- * `for`-`await`-`of` syntax is used with the iterable to get response elements on-demand.
- * @param {Object} request
- *   The request object that will be sent.
- * @param {string} request.parent
- *   Name of the parent Version resource. Example:
- *   `apps/myapp/services/default/versions/v1`.
- * @param {number} request.pageSize
- *   Maximum results to return per page.
- * @param {string} request.pageToken
- *   Continuation token for fetching the next page of results.
- * @param {object} [options]
- *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
- * @returns {Object}
- *   An iterable Object that allows [async iteration](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols).
- *   When you iterate the returned iterable, each element will be an object representing
- *   [Instance]{@link google.appengine.v1.Instance}. The API will be called under the hood as needed, once per the page,
- *   so you can stop the iteration when you don't need more results.
- *   Please see the
- *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
- *   for more details and examples.
- * @example
- * const iterable = client.listInstancesAsync(request);
- * for await (const response of iterable) {
- *   // process response
- * }
- */
+  /**
+   * Equivalent to `listInstances`, but returns an iterable object.
+   *
+   * `for`-`await`-`of` syntax is used with the iterable to get response elements on-demand.
+   * @param {Object} request
+   *   The request object that will be sent.
+   * @param {string} request.parent
+   *   Name of the parent Version resource. Example:
+   *   `apps/myapp/services/default/versions/v1`.
+   * @param {number} request.pageSize
+   *   Maximum results to return per page.
+   * @param {string} request.pageToken
+   *   Continuation token for fetching the next page of results.
+   * @param {object} [options]
+   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+   * @returns {Object}
+   *   An iterable Object that allows [async iteration](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols).
+   *   When you iterate the returned iterable, each element will be an object representing
+   *   [Instance]{@link google.appengine.v1.Instance}. The API will be called under the hood as needed, once per the page,
+   *   so you can stop the iteration when you don't need more results.
+   *   Please see the
+   *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
+   *   for more details and examples.
+   * @example
+   * const iterable = client.listInstancesAsync(request);
+   * for await (const response of iterable) {
+   *   // process response
+   * }
+   */
   listInstancesAsync(
-      request?: protos.google.appengine.v1.IListInstancesRequest,
-      options?: CallOptions):
-    AsyncIterable<protos.google.appengine.v1.IInstance>{
+    request?: protos.google.appengine.v1.IListInstancesRequest,
+    options?: CallOptions
+  ): AsyncIterable<protos.google.appengine.v1.IInstance> {
     request = request || {};
     options = options || {};
     options.otherArgs = options.otherArgs || {};
@@ -787,14 +943,14 @@ export class InstancesClient {
     options.otherArgs.headers[
       'x-goog-request-params'
     ] = gax.routingHeader.fromParams({
-      'parent': request.parent || '',
+      parent: request.parent || '',
     });
     options = options || {};
     const callSettings = new gax.CallSettings(options);
     this.initialize();
     return this.descriptors.page.listInstances.asyncIterate(
       this.innerApiCalls['listInstances'] as GaxCall,
-      request as unknown as RequestType,
+      (request as unknown) as RequestType,
       callSettings
     ) as AsyncIterable<protos.google.appengine.v1.IInstance>;
   }
@@ -811,7 +967,12 @@ export class InstancesClient {
    * @param {string} instance
    * @returns {string} Resource name string.
    */
-  instancePath(app:string,service:string,version:string,instance:string) {
+  instancePath(
+    app: string,
+    service: string,
+    version: string,
+    instance: string
+  ) {
     return this.pathTemplates.instancePathTemplate.render({
       app: app,
       service: service,
