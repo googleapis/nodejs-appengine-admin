@@ -406,6 +406,10 @@ export class ServicesClient {
    *   for more details and examples.
    * @example
    * const [response] = await client.getService(request);
+   *
+   * @example <caption>include:samples/generated/v1/services.get_service.js</caption>
+   * region_tag:appengine_get_service_sample
+   *
    */
   getService(
     request?: protos.google.appengine.v1.IGetServiceRequest,
@@ -520,6 +524,10 @@ export class ServicesClient {
    * @example
    * const [operation] = await client.updateService(request);
    * const [response] = await operation.promise();
+   *
+   * @example <caption>include:samples/generated/v1/services.update_service.js</caption>
+   * region_tag:appengine_update_service_sample
+   *
    */
   updateService(
     request?: protos.google.appengine.v1.IUpdateServiceRequest,
@@ -583,6 +591,10 @@ export class ServicesClient {
    * console.log(decodedOperation.result);
    * console.log(decodedOperation.done);
    * console.log(decodedOperation.metadata);
+   *
+   * @example <caption>include:samples/generated/v1/services.update_service.js</caption>
+   * region_tag:appengine_update_service_sample
+   *
    */
   async checkUpdateServiceProgress(
     name: string
@@ -661,6 +673,10 @@ export class ServicesClient {
    * @example
    * const [operation] = await client.deleteService(request);
    * const [response] = await operation.promise();
+   *
+   * @example <caption>include:samples/generated/v1/services.delete_service.js</caption>
+   * region_tag:appengine_delete_service_sample
+   *
    */
   deleteService(
     request?: protos.google.appengine.v1.IDeleteServiceRequest,
@@ -724,6 +740,10 @@ export class ServicesClient {
    * console.log(decodedOperation.result);
    * console.log(decodedOperation.done);
    * console.log(decodedOperation.metadata);
+   *
+   * @example <caption>include:samples/generated/v1/services.delete_service.js</caption>
+   * region_tag:appengine_delete_service_sample
+   *
    */
   async checkDeleteServiceProgress(
     name: string
@@ -797,6 +817,10 @@ export class ServicesClient {
    *   Please see the
    *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
    *   for more details and examples.
+   *
+   * @example <caption>include:samples/generated/v1/services.list_services.js</caption>
+   * region_tag:appengine_list_services_sample
+   *
    */
   listServices(
     request?: protos.google.appengine.v1.IListServicesRequest,
@@ -859,6 +883,10 @@ export class ServicesClient {
    *   Please see the
    *   [documentation](https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination)
    *   for more details and examples.
+   *
+   * @example <caption>include:samples/generated/v1/services.list_services.js</caption>
+   * region_tag:appengine_list_services_sample
+   *
    */
   listServicesStream(
     request?: protos.google.appengine.v1.IListServicesRequest,
@@ -872,7 +900,8 @@ export class ServicesClient {
       gax.routingHeader.fromParams({
         parent: request.parent || '',
       });
-    const callSettings = new gax.CallSettings(options);
+    const defaultCallSettings = this._defaults['listServices'];
+    const callSettings = defaultCallSettings.merge(options);
     this.initialize();
     return this.descriptors.page.listServices.createStream(
       this.innerApiCalls.listServices as gax.GaxCall,
@@ -908,6 +937,10 @@ export class ServicesClient {
    * for await (const response of iterable) {
    *   // process response
    * }
+   *
+   * @example <caption>include:samples/generated/v1/services.list_services.js</caption>
+   * region_tag:appengine_list_services_sample
+   *
    */
   listServicesAsync(
     request?: protos.google.appengine.v1.IListServicesRequest,
@@ -922,7 +955,8 @@ export class ServicesClient {
         parent: request.parent || '',
       });
     options = options || {};
-    const callSettings = new gax.CallSettings(options);
+    const defaultCallSettings = this._defaults['listServices'];
+    const callSettings = defaultCallSettings.merge(options);
     this.initialize();
     return this.descriptors.page.listServices.asyncIterate(
       this.innerApiCalls['listServices'] as GaxCall,

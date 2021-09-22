@@ -399,6 +399,10 @@ export class ApplicationsClient {
    *   for more details and examples.
    * @example
    * const [response] = await client.getApplication(request);
+   *
+   * @example <caption>include:samples/generated/v1/applications.get_application.js</caption>
+   * region_tag:appengine_get_application_sample
+   *
    */
   getApplication(
     request?: protos.google.appengine.v1.IGetApplicationRequest,
@@ -501,6 +505,10 @@ export class ApplicationsClient {
    * @example
    * const [operation] = await client.createApplication(request);
    * const [response] = await operation.promise();
+   *
+   * @example <caption>include:samples/generated/v1/applications.create_application.js</caption>
+   * region_tag:appengine_create_application_sample
+   *
    */
   createApplication(
     request?: protos.google.appengine.v1.ICreateApplicationRequest,
@@ -558,6 +566,10 @@ export class ApplicationsClient {
    * console.log(decodedOperation.result);
    * console.log(decodedOperation.done);
    * console.log(decodedOperation.metadata);
+   *
+   * @example <caption>include:samples/generated/v1/applications.create_application.js</caption>
+   * region_tag:appengine_create_application_sample
+   *
    */
   async checkCreateApplicationProgress(
     name: string
@@ -644,6 +656,10 @@ export class ApplicationsClient {
    * @example
    * const [operation] = await client.updateApplication(request);
    * const [response] = await operation.promise();
+   *
+   * @example <caption>include:samples/generated/v1/applications.update_application.js</caption>
+   * region_tag:appengine_update_application_sample
+   *
    */
   updateApplication(
     request?: protos.google.appengine.v1.IUpdateApplicationRequest,
@@ -707,6 +723,10 @@ export class ApplicationsClient {
    * console.log(decodedOperation.result);
    * console.log(decodedOperation.done);
    * console.log(decodedOperation.metadata);
+   *
+   * @example <caption>include:samples/generated/v1/applications.update_application.js</caption>
+   * region_tag:appengine_update_application_sample
+   *
    */
   async checkUpdateApplicationProgress(
     name: string
@@ -794,6 +814,10 @@ export class ApplicationsClient {
    * @example
    * const [operation] = await client.repairApplication(request);
    * const [response] = await operation.promise();
+   *
+   * @example <caption>include:samples/generated/v1/applications.repair_application.js</caption>
+   * region_tag:appengine_repair_application_sample
+   *
    */
   repairApplication(
     request?: protos.google.appengine.v1.IRepairApplicationRequest,
@@ -857,6 +881,10 @@ export class ApplicationsClient {
    * console.log(decodedOperation.result);
    * console.log(decodedOperation.done);
    * console.log(decodedOperation.metadata);
+   *
+   * @example <caption>include:samples/generated/v1/applications.repair_application.js</caption>
+   * region_tag:appengine_repair_application_sample
+   *
    */
   async checkRepairApplicationProgress(
     name: string
