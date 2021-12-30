@@ -6,7 +6,6 @@
 
 
 [![npm version](https://img.shields.io/npm/v/@google-cloud/appengine-admin.svg)](https://www.npmjs.org/package/@google-cloud/appengine-admin)
-[![codecov](https://img.shields.io/codecov/c/github/googleapis/nodejs-appengine-admin/main.svg?style=flat)](https://codecov.io/gh/googleapis/nodejs-appengine-admin)
 
 
 
