@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/googleapis/nodejs-appengine-admin/compare/v1.2.0...v1.3.0) (2022-05-09)
+
+
+### Features
+
+* add Application.service_account ([#130](https://github.com/googleapis/nodejs-appengine-admin/issues/130)) ([698f05e](https://github.com/googleapis/nodejs-appengine-admin/commit/698f05e03e81b24602a6f6a681186540722698e8))
+
 ## [1.2.0](https://github.com/googleapis/nodejs-appengine-admin/compare/v1.1.0...v1.2.0) (2022-03-23)
 
 
